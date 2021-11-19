@@ -419,10 +419,15 @@ public class PatientFrmae extends javax.swing.JFrame {
     }//GEN-LAST:event_patientTableMouseClicked
 
     private void detailsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detailsBtnActionPerformed
+        if (id != null) {
             PatientDetails patientDetails = new PatientDetails();
             this.dispose();
             patientDetails.show();
-        
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Select a patient to view details", "Select record", JOptionPane.ERROR_MESSAGE);
+
+        }
+
     }//GEN-LAST:event_detailsBtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -432,13 +437,13 @@ public class PatientFrmae extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void deletBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletBtnActionPerformed
-        if(id != null){
+        if (id != null) {
             int choice = JOptionPane.showConfirmDialog(null, "Delete this record?", "Do you want to delete this record?", NORMAL);
-        if (choice == 0) { // yes
-            patientDaoImpl.deletePatient(id);
-            resetForm();
-        }
-        }else{
+            if (choice == 0) { // yes
+                patientDaoImpl.deletePatient(id);
+                resetForm();
+            }
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Select a patient to delete", "Select record", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_deletBtnActionPerformed
@@ -450,7 +455,6 @@ public class PatientFrmae extends javax.swing.JFrame {
 
         if (p != null) {
             DefaultTableModel model = new DefaultTableModel(columns, 0);
-            
 
             Object rowData[] = {p.getId(), p.getFullName(), p.getBirthDate(), p.getAge(), p.getNrcNumber(), p.getCivilStatus(), p.getEthnicity(), p.getContactNumber(), p.getAddress(), p.getEmail()};
 

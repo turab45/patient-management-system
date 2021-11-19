@@ -7,8 +7,12 @@ package patient_management.daoimpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import patient_management.database.Database;
 import patient_management.model.Appointment;
+import patient_management.model.Patient;
 
 
 public class AppointmentDaoImpl {
@@ -31,5 +35,60 @@ public class AppointmentDaoImpl {
         }
         
         return row;
+    }
+    
+    public List<Appointment> getAppointmentsOfPatient(patient_management.model.Patient p){
+        List<Appointment> apponitments = new ArrayList<>();
+        
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM appointment where patient_id=?");
+            pstmt.setInt(1, p.getId());
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while(rs.next()){
+                Appointment appointment = new Appointment();
+                appointment.setId(rs.getInt(1));
+                appointment.setDate(rs.getString(2));
+                appointment.setRemarks(rs.getString(3));
+                appointment.setPatient(p);
+                
+                apponitments.add(appointment);
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return apponitments;
+    }
+    
+    public List<Appointment> getAllAppointments(){
+        List<Appointment> apponitments = new ArrayList<>();
+        
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM appointment");
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while(rs.next()){
+                Appointment appointment = new Appointment();
+                appointment.setId(rs.getInt(1));
+                appointment.setDate(rs.getString(2));
+                appointment.setRemarks(rs.getString(3));
+                Patient p = new Patient();
+                p.setId(rs.getInt(4));
+                appointment.setPatient(p);
+                
+                apponitments.add(appointment);
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return apponitments;
     }
 }
