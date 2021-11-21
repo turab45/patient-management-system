@@ -40,6 +40,7 @@ public class dashboard extends javax.swing.JFrame {
         loginBtn = new javax.swing.JButton();
         loginBtn1 = new javax.swing.JButton();
         loginBtn2 = new javax.swing.JButton();
+        loginBtn3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,7 +57,7 @@ public class dashboard extends javax.swing.JFrame {
         });
 
         loginBtn1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        loginBtn1.setText("DOCTORS");
+        loginBtn1.setText("Test");
         loginBtn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginBtn1ActionPerformed(evt);
@@ -71,6 +72,14 @@ public class dashboard extends javax.swing.JFrame {
             }
         });
 
+        loginBtn3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        loginBtn3.setText("Drug");
+        loginBtn3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginBtn3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -82,8 +91,10 @@ public class dashboard extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(33, 33, 33)
-                        .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(236, Short.MAX_VALUE))
+                        .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(115, 115, 115)
+                        .addComponent(loginBtn3, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(98, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(loginBtn2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -101,9 +112,15 @@ public class dashboard extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53)
                 .addComponent(loginBtn2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
-                .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(120, 120, 120))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(120, 120, 120))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(loginBtn3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(148, 148, 148)
@@ -138,7 +155,9 @@ public class dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void loginBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtn1ActionPerformed
-        // TODO add your handling code here:
+        TestFrame test = new TestFrame();
+        this.dispose();
+        test.show();
     }//GEN-LAST:event_loginBtn1ActionPerformed
 
     private void loginBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtn2ActionPerformed
@@ -147,6 +166,12 @@ public class dashboard extends javax.swing.JFrame {
         p.show();
         
     }//GEN-LAST:event_loginBtn2ActionPerformed
+
+    private void loginBtn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtn3ActionPerformed
+        DrugFrame drug = new DrugFrame();
+        this.dispose();
+        drug.show();
+    }//GEN-LAST:event_loginBtn3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -190,5 +215,6 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JButton loginBtn;
     private javax.swing.JButton loginBtn1;
     private javax.swing.JButton loginBtn2;
+    private javax.swing.JButton loginBtn3;
     // End of variables declaration//GEN-END:variables
 }
