@@ -69,4 +69,46 @@ public class TestDaoImpl {
         
         return tests;
     }
+    
+    public Test getTestByName(String testName){
+        Test test = null;
+        
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("select * from test where test_name=?");
+            pstmt.setString(1, testName);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                test = new Test(rs.getString(2), rs.getString(3));
+                test.setId(rs.getInt(1));
+                
+            }
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return test;
+    }
+    
+    public Test getTestById(int id){
+        Test test = null;
+        
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("select * from test where id=?");
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                test = new Test(rs.getString(2), rs.getString(3));
+                test.setId(rs.getInt(1));
+                
+            }
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return test;
+    }
 }

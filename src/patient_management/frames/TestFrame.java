@@ -9,9 +9,11 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import patient_management.daoimpl.AppointmentDaoImpl;
+import patient_management.daoimpl.ComplaintDaoOImpl;
 import patient_management.daoimpl.PatientDaoImpl;
 import patient_management.daoimpl.TestDaoImpl;
 import static patient_management.frames.PatientFrmae.id;
+import patient_management.model.Complaint;
 import patient_management.model.Patient;
 import patient_management.model.Test;
 
@@ -20,25 +22,24 @@ import patient_management.model.Test;
  * @author USER
  */
 public class TestFrame extends javax.swing.JFrame {
-    
+
     TestDaoImpl testDaoImpl = null;
+    ComplaintDaoOImpl complaintDaoOImpl = null;
     public static Integer id = null;
     public static Patient patient = null;
-    
+
     Object columns[] = {"ID", "Test Name", "Description"};
 
-        
     /**
      * Creates new form Login
      */
     public TestFrame() {
         testDaoImpl = new TestDaoImpl();
-        
-        
+        complaintDaoOImpl = new ComplaintDaoOImpl();
+
         this.setLocation(200, 200);
         initComponents();
-        
-        fillPatientCombo();
+
         fillTable();
     }
 
@@ -208,11 +209,11 @@ public class TestFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-            String testName = testNameField.getText();
-            String desc = descriptionField.getText();
-            
-            int res = testDaoImpl.addTest(new Test(testName, desc));
-            if (res > 0) {
+        String testName = testNameField.getText();
+        String desc = descriptionField.getText();
+
+        int res = testDaoImpl.addTest(new Test(testName, desc));
+        if (res > 0) {
             JOptionPane.showMessageDialog(rootPane, "Test added.", "Test added.", JOptionPane.INFORMATION_MESSAGE);
             testNameField.setText("");
             descriptionField.setText("");
@@ -220,28 +221,35 @@ public class TestFrame extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(rootPane, "Something went wrong.", "Something went wrong.", JOptionPane.ERROR_MESSAGE);
         }
-            
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         dashboard d = new dashboard();
+        dashboard d = new dashboard();
         this.dispose();
         d.show();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void testTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_testTableMouseClicked
-            id = (Integer) testTable.getValueAt(testTable.getSelectedRow(), 0);
+        id = (Integer) testTable.getValueAt(testTable.getSelectedRow(), 0);
     }//GEN-LAST:event_testTableMouseClicked
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        if(id != null){
-            int res = testDaoImpl.deleteTest(id);
-            if(res > 0){
-                JOptionPane.showMessageDialog(null, "Test delted", "Test delted", JOptionPane.PLAIN_MESSAGE);
-                fillTable();
+        if (id != null) {
+            Test test = testDaoImpl.getTestById(id);
+
+            if (!checkIfItIsInList(test.getTestName())) {
+                int res = testDaoImpl.deleteTest(id);
+                if (res > 0) {
+                    JOptionPane.showMessageDialog(null, "Test delted", "Test delted", JOptionPane.PLAIN_MESSAGE);
+                    fillTable();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error in deleting", "Error in deleting", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error in deleting test because this test is being used in complaints. Delete there first", "Error in deleting", JOptionPane.ERROR_MESSAGE);
             }
-            else
-                JOptionPane.showMessageDialog(null, "Error in deleting", "Error in deleting", JOptionPane.ERROR_MESSAGE);
+
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
     public static void main(String args[]) {
@@ -282,20 +290,26 @@ public class TestFrame extends javax.swing.JFrame {
             }
         });
     }
-    
-    
-    public void fillPatientCombo(){
-    
+
+    public boolean checkIfItIsInList(String cont) {
+        List<Complaint> complaints = complaintDaoOImpl.getAllComplaints();
+        for (Complaint c : complaints) {
+            Test testToCheck = testDaoImpl.getTestById(c.getTest().getId());
+            if (testToCheck.getTestName().equalsIgnoreCase(cont)) {
+                return true;
+            }
+
+        }
+        return false;
     }
-    
+
     public void fillTable() {
 
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         List<Test> tests = testDaoImpl.getAllTests();
 
         for (Test test : tests) {
-            
-            
+
             Object rowData[] = {test.getId(), test.getTestName(), test.getDescription()};
 
             model.addRow(rowData);

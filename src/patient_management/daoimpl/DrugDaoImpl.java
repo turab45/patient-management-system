@@ -69,4 +69,48 @@ public class DrugDaoImpl {
         
         return tests;
     }
+    
+    public Drug getDrugByName(String drugName){
+        Drug drug = null;
+        
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("select * from drug where drug_name=?");
+            pstmt.setString(1, drugName);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                drug = new Drug(rs.getString(2), rs.getString(3));
+                drug.setId(rs.getInt(1));
+                
+               
+            }
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return drug;
+    }
+    
+    public Drug getDrugById(int id){
+        Drug drug = null;
+        
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("select * from drug where id=?");
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                drug = new Drug(rs.getString(2), rs.getString(3));
+                drug.setId(rs.getInt(1));
+                
+               
+            }
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return drug;
+    }
 }

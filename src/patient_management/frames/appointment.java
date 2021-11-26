@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import patient_management.daoimpl.AppointmentDaoImpl;
 import patient_management.daoimpl.PatientDaoImpl;
 import static patient_management.frames.PatientFrmae.id;
+import static patient_management.frames.TestFrame.id;
 import patient_management.model.Appointment;
 import patient_management.model.Patient;
 
@@ -19,25 +20,24 @@ import patient_management.model.Patient;
  * @author USER
  */
 public class appointment extends javax.swing.JFrame {
-    
+
     PatientDaoImpl patientDaoImpl = null;
     AppointmentDaoImpl appointmentDaoImpl = null;
-
+    Integer id = null;
     public static Patient patient = null;
-    
+
     Object columns[] = {"ID", "Patient Name", "Appointment Date", "Remarks"};
 
-        
     /**
      * Creates new form Login
      */
     public appointment() {
         patientDaoImpl = new PatientDaoImpl();
         appointmentDaoImpl = new AppointmentDaoImpl();
-        
+
         this.setLocation(200, 200);
         initComponents();
-        
+
         fillPatientCombo();
         fillTable();
     }
@@ -63,6 +63,7 @@ public class appointment extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        deleteBtn = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         appointmentsTable = new javax.swing.JTable();
@@ -110,6 +111,14 @@ public class appointment extends javax.swing.JFrame {
             }
         });
 
+        deleteBtn.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        deleteBtn.setText("Delete Appointment");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -138,7 +147,8 @@ public class appointment extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton4)
                             .addComponent(jButton3)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(93, 93, 93))
         );
 
@@ -158,16 +168,19 @@ public class appointment extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
+                    .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(25, 25, 25)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton4)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton3)
+                                .addGap(25, 25, 25)
+                                .addComponent(jButton4))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -225,7 +238,7 @@ public class appointment extends javax.swing.JFrame {
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
         );
@@ -237,21 +250,22 @@ public class appointment extends javax.swing.JFrame {
         String patientName = patientsCombo.getSelectedItem().toString();
         String date = dateField.getText();
         String remarks = remarksField.getText();
-        
+
         Patient patient = patientDaoImpl.getPatientByName(patientName);
-        
+
         int res = appointmentDaoImpl.addAppointment(new Appointment(patient, date, remarks));
-        
-        if(res > 0){
+
+        if (res > 0) {
             JOptionPane.showMessageDialog(rootPane, "Appointment added", "Appointment added", JOptionPane.INFORMATION_MESSAGE);
-            
-        }else{
+            fillTable();
+
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Something went wrong.", "Something went wrong.", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         dashboard d = new dashboard();
+        dashboard d = new dashboard();
         this.dispose();
         d.show();
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -276,9 +290,24 @@ public class appointment extends javax.swing.JFrame {
 
     private void appointmentsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_appointmentsTableMouseClicked
         String pName = (String) appointmentsTable.getValueAt(appointmentsTable.getSelectedRow(), 1);
-        
+        id = (Integer) appointmentsTable.getValueAt(appointmentsTable.getSelectedRow(), 0);
+
         patient = patientDaoImpl.getPatientByName(pName);
     }//GEN-LAST:event_appointmentsTableMouseClicked
+
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        if (id != null) {
+
+            int res = appointmentDaoImpl.deleteAppointment(id);
+            if (res > 0) {
+                JOptionPane.showMessageDialog(null, "Appointment delted", "Appointment delted", JOptionPane.PLAIN_MESSAGE);
+                fillTable();
+            } else {
+                JOptionPane.showMessageDialog(null, "Error in deleting", "Error in deleting", JOptionPane.ERROR_MESSAGE);
+            }
+
+        }
+    }//GEN-LAST:event_deleteBtnActionPerformed
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -313,27 +342,26 @@ public class appointment extends javax.swing.JFrame {
             }
         });
     }
-    
-    
-    public void fillPatientCombo(){
-    
+
+    public void fillPatientCombo() {
+
         List<Patient> allPatients = patientDaoImpl.getAllPatients();
         //patientsCombo.addItem("Select Patient");
-        for(Patient p : allPatients){
-        
+        for (Patient p : allPatients) {
+
             patientsCombo.addItem(p.getFullName());
         }
     }
-    
+
     public void fillTable() {
 
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         List<Appointment> appointments = appointmentDaoImpl.getAllAppointments();
 
         for (Appointment ap : appointments) {
-            
+
             Patient p = patientDaoImpl.getPatientById(ap.getPatient().getId());
-            
+
             Object rowData[] = {ap.getId(), p.getFullName(), ap.getDate(), ap.getRemarks()};
 
             model.addRow(rowData);
@@ -346,6 +374,7 @@ public class appointment extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable appointmentsTable;
     private javax.swing.JTextField dateField;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

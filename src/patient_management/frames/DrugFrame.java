@@ -8,13 +8,9 @@ package patient_management.frames;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import patient_management.daoimpl.AppointmentDaoImpl;
+import patient_management.daoimpl.ComplaintDaoOImpl;
 import patient_management.daoimpl.DrugDaoImpl;
-import patient_management.daoimpl.PatientDaoImpl;
-import patient_management.daoimpl.TestDaoImpl;
-import static patient_management.frames.PatientFrmae.id;
-import static patient_management.frames.TestFrame.id;
-import patient_management.model.Appointment;
+import patient_management.model.Complaint;
 import patient_management.model.Drug;
 import patient_management.model.Patient;
 import patient_management.model.Test;
@@ -26,7 +22,7 @@ import patient_management.model.Test;
 public class DrugFrame extends javax.swing.JFrame {
     
     DrugDaoImpl drugDaoImpl = null;
-    
+    ComplaintDaoOImpl complaintDaoOImpl = null;
     public static Integer id = null;
     public static Patient patient = null;
     
@@ -38,12 +34,10 @@ public class DrugFrame extends javax.swing.JFrame {
      */
     public DrugFrame() {
         drugDaoImpl = new DrugDaoImpl();
-        
+        complaintDaoOImpl = new ComplaintDaoOImpl();
         
         this.setLocation(200, 200);
         initComponents();
-        
-        fillPatientCombo();
         fillTable();
     }
 
@@ -238,13 +232,23 @@ public class DrugFrame extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if(id != null){
-            int res = drugDaoImpl.deleteTDrug(id);
+            
+            Drug drug = drugDaoImpl.getDrugById(id);
+            if (!checkIfItIsInList(drug.getName())) {
+                int res = drugDaoImpl.deleteTDrug(id);
+            
             if(res > 0){
                 JOptionPane.showMessageDialog(null, "Drug delted", "Drug delted", JOptionPane.PLAIN_MESSAGE);
                 fillTable();
             }
             else
                 JOptionPane.showMessageDialog(null, "Error in deleting", "Error in deleting", JOptionPane.ERROR_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(null, "Error in deleting drug because it is being used in complaints. Delete there first", "Error in deleting", JOptionPane.ERROR_MESSAGE);
+            }
+            
+            
+            
         }
     }//GEN-LAST:event_jButton3ActionPerformed
     public static void main(String args[]) {
@@ -295,8 +299,16 @@ public class DrugFrame extends javax.swing.JFrame {
     }
     
     
-    public void fillPatientCombo(){
-    
+    public boolean checkIfItIsInList(String cont) {
+        List<Complaint> complaints = complaintDaoOImpl.getAllComplaints();
+        for (Complaint c : complaints) {
+            Drug drugToCheck = drugDaoImpl.getDrugById(c.getDrug().getId());
+            if (drugToCheck.getName().equalsIgnoreCase(cont)) {
+                return true;
+            }
+
+        }
+        return false;
     }
     
     public void fillTable() {

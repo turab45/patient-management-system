@@ -120,4 +120,19 @@ public class AppointmentDaoImpl {
         
         return apponitments;
     }
+    
+    public int deleteAppointment(int id){
+        Integer row = 1;
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("DELETE FROM appointment where id=?");
+            pstmt.setInt(1, id);
+            row = pstmt.executeUpdate();
+            
+        } catch (Exception e) {
+             System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return row;
+    }
 }

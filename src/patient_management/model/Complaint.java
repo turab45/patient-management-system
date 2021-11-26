@@ -14,11 +14,15 @@ public class Complaint {
     private String complaint;
     private String remarks;
     private Patient patient;
+    private Drug drug;
+    private Test test;
 
-    public Complaint(String complaint, String remarks, Patient patient) {
+    public Complaint(String complaint, String remarks, Patient patient, Drug drug, Test test) {
         this.complaint = complaint;
         this.remarks = remarks;
         this.patient = patient;
+        this.drug = drug;
+        this.test = test;
     }
 
     public Complaint() {
@@ -59,6 +63,22 @@ public class Complaint {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public Drug getDrug() {
+        return drug;
+    }
+
+    public void setDrug(Drug drug) {
+        this.drug = drug;
+    }
+
+    public Test getTest() {
+        return test;
+    }
+
+    public void setTest(Test test) {
+        this.test = test;
     }
     
     

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import patient_management.database.Database;
 import patient_management.model.Complaint;
+import patient_management.model.Drug;
 import patient_management.model.Patient;
 import patient_management.model.Test;
 
@@ -25,8 +26,12 @@ public class ComplaintDaoOImpl {
     public int addComplaint(Complaint complaint){
         int row = 0;
         try {
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO complaint(complaint,remarks,patient_id) "
-                    + "VALUES('"+complaint.getComplaint()+"','"+complaint.getRemarks()+"','"+complaint.getPatient().getId()+"')");
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO complaint(complaint,remarks,patient_id,drug_id,test_id) VALUES(?,?,?,?,?)");
+            pstmt.setString(1, complaint.getComplaint());
+            pstmt.setString(2, complaint.getRemarks());
+            pstmt.setInt(3, complaint.getPatient().getId());
+            pstmt.setInt(4, complaint.getDrug().getId());
+            pstmt.setInt(5, complaint.getTest().getId());
             row = pstmt.executeUpdate();
             
         } catch (Exception e) {
@@ -46,10 +51,14 @@ public class ComplaintDaoOImpl {
             while (rs.next()) {
                 Patient patient = new Patient();
                 patient.setId(rs.getInt(4));
-                Complaint test = new Complaint(rs.getString(2), rs.getString(3), patient);
-                test.setId(rs.getInt(1));
+                Test test = new Test();
+                test.setId(rs.getInt(5));
+                Drug drug = new Drug();
+                drug.setId(rs.getInt(6));
+                Complaint comp = new Complaint(rs.getString(2), rs.getString(3), patient,drug,test);
+                comp.setId(rs.getInt(1));
                 
-                tests.add(test);
+                tests.add(comp);
                 
             }
         } catch (Exception e) {
@@ -71,10 +80,13 @@ public class ComplaintDaoOImpl {
             while (rs.next()) {
                 Patient patient = new Patient();
                 patient.setId(rs.getInt(4));
-                Complaint test = new Complaint(rs.getString(2), rs.getString(3), patient);
-                test.setId(rs.getInt(1));
-                
-                tests.add(test);
+                Test test = new Test();
+                test.setId(rs.getInt(5));
+                Drug drug = new Drug();
+                drug.setId(rs.getInt(6));
+                Complaint comp = new Complaint(rs.getString(2), rs.getString(3), patient, drug,test);
+                comp.setId(rs.getInt(1));
+                tests.add(comp);
                 
             }
         } catch (Exception e) {

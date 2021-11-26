@@ -10,11 +10,15 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import patient_management.daoimpl.AppointmentDaoImpl;
 import patient_management.daoimpl.ComplaintDaoOImpl;
+import patient_management.daoimpl.DrugDaoImpl;
 import patient_management.daoimpl.PatientDaoImpl;
+import patient_management.daoimpl.TestDaoImpl;
 import static patient_management.frames.PatientFrmae.id;
 import patient_management.model.Appointment;
 import patient_management.model.Complaint;
+import patient_management.model.Drug;
 import patient_management.model.Patient;
+import patient_management.model.Test;
 
 /**
  *
@@ -24,11 +28,13 @@ public class complaints extends javax.swing.JFrame {
     
     ComplaintDaoOImpl complaintDaoOImpl = null;
     PatientDaoImpl patientDaoImpl = null;
+    DrugDaoImpl drugDaoImpl = null;
+    TestDaoImpl testDaoImpl = null;
     public static Patient patient = null;
         public static Integer id = null;
 
     
-    Object columns[] = {"ID", "Complaint", "Remarks", "Patient Name"};
+    Object columns[] = {"ID", "Complaint", "Remarks", "Patient Name", "Drug", "Test"};
 
         
     /**
@@ -37,10 +43,14 @@ public class complaints extends javax.swing.JFrame {
     public complaints() {
         complaintDaoOImpl = new ComplaintDaoOImpl();
         patientDaoImpl = new PatientDaoImpl();
+        drugDaoImpl = new DrugDaoImpl();
+        testDaoImpl = new TestDaoImpl();
         
         this.setLocation(200, 200);
         initComponents();
         fillPatientCombo();
+        fillTestCombo();
+        fillDrugCombo();
         fillTable();
     }
 
@@ -263,10 +273,15 @@ public class complaints extends javax.swing.JFrame {
         String patientName = patientsCombo.getSelectedItem().toString();
         String complaint = complaintField.getText();
         String remarks = remarksField.getText();
+        String drugName = drugCombo.getSelectedItem().toString();
+        String testName = testCombo.getSelectedItem().toString();
+        
+        Drug drug = drugDaoImpl.getDrugByName(drugName);
+        Test test = testDaoImpl.getTestByName(testName);
         
         Patient patient = patientDaoImpl.getPatientByName(patientName);
         
-        int res = complaintDaoOImpl.addComplaint(new Complaint(complaint, remarks, patient));
+        int res = complaintDaoOImpl.addComplaint(new Complaint(complaint, remarks, patient,drug,test));
         
         if(res > 0){
             JOptionPane.showMessageDialog(rootPane, "Complaint added", "Complaint added", JOptionPane.INFORMATION_MESSAGE);
@@ -350,6 +365,24 @@ public class complaints extends javax.swing.JFrame {
             patientsCombo.addItem(p.getFullName());
         }
     }
+    public void fillTestCombo(){
+    
+        List<Test> allTest = testDaoImpl.getAllTests();
+        //patientsCombo.addItem("Select Patient");
+        for(Test t : allTest){
+        
+            testCombo.addItem(t.getTestName());
+        }
+    }
+    public void fillDrugCombo(){
+    
+        List<Drug> allDrugs = drugDaoImpl.getAllDrugs();
+        //patientsCombo.addItem("Select Patient");
+        for(Drug d : allDrugs){
+        
+            drugCombo.addItem(d.getName());
+        }
+    }
     
     public void fillTable() {
 
@@ -359,8 +392,11 @@ public class complaints extends javax.swing.JFrame {
         for (Complaint ap : appointments) {
             
             Patient p = patientDaoImpl.getPatientById(ap.getPatient().getId());
+            System.out.println("Test id = "+ap.getTest().getId()+", Drug id = "+ap.getDrug().getId());
+            Drug drug = drugDaoImpl.getDrugById(ap.getDrug().getId());
+            Test test = testDaoImpl.getTestById(ap.getTest().getId());
             
-            Object rowData[] = {ap.getId(),ap.getComplaint(), ap.getRemarks(), p.getFullName()};
+            Object rowData[] = {ap.getId(),ap.getComplaint(), ap.getRemarks(), p.getFullName(), drug.getName(), test.getTestName()};
 
             model.addRow(rowData);
 
