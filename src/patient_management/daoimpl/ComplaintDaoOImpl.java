@@ -59,4 +59,43 @@ public class ComplaintDaoOImpl {
         
         return tests;
     }
+    
+    public List<Complaint> getComplaintsOfPatient(int id){
+        List<Complaint> tests = new ArrayList<>();
+        
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("select * from complaint where patient_id=?");
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Patient patient = new Patient();
+                patient.setId(rs.getInt(4));
+                Complaint test = new Complaint(rs.getString(2), rs.getString(3), patient);
+                test.setId(rs.getInt(1));
+                
+                tests.add(test);
+                
+            }
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return tests;
+    }
+    
+    public int deleteComplaint(int id){
+        int row = 0;
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("DELETE FROM complaint where id=?");
+            pstmt.setInt(1, id);
+            row = pstmt.executeUpdate();
+            
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        return  row;
+    }
 }

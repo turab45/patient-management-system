@@ -34,6 +34,20 @@ public class DrugDaoImpl {
         return  row;
     }
     
+    public int deleteTDrug(int drugId){
+        int row = 0;
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("DELETE FROM drug where id=?");
+            pstmt.setInt(1, drugId);
+            row = pstmt.executeUpdate();
+            
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        return  row;
+    }
+    
     public List<Drug> getAllDrugs(){
         List<Drug> tests = new ArrayList<>();
         

@@ -91,4 +91,33 @@ public class AppointmentDaoImpl {
         
         return apponitments;
     }
+    
+    public List<Appointment> getApponitmentsOfPatient(int id){
+        List<Appointment> apponitments = new ArrayList<>();
+        
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM appointment where patient_id=?");
+            pstmt.setInt(1, id);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while(rs.next()){
+                Appointment appointment = new Appointment();
+                appointment.setId(rs.getInt(1));
+                appointment.setDate(rs.getString(2));
+                appointment.setRemarks(rs.getString(3));
+                Patient p = new Patient();
+                p.setId(rs.getInt(4));
+                appointment.setPatient(p);
+                
+                apponitments.add(appointment);
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return apponitments;
+    }
 }

@@ -34,6 +34,20 @@ public class TestDaoImpl {
         return  row;
     }
     
+    public int deleteTest(int testId){
+        int row = 0;
+        try {
+            PreparedStatement pstmt = conn.prepareStatement("Delete from test where id=?");
+            pstmt.setInt(1, testId);
+            row = pstmt.executeUpdate();
+            
+        } catch (Exception e) {
+            System.out.println("Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        return  row;
+    }
+    
     public List<Test> getAllTests(){
         List<Test> tests = new ArrayList<>();
         

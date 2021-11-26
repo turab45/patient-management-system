@@ -8,6 +8,8 @@ package patient_management.frames;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import patient_management.daoimpl.AppointmentDaoImpl;
+import patient_management.daoimpl.ComplaintDaoOImpl;
 import patient_management.daoimpl.PatientDaoImpl;
 import patient_management.model.Patient;
 
@@ -18,6 +20,9 @@ import patient_management.model.Patient;
 public class PatientFrmae extends javax.swing.JFrame {
 
     PatientDaoImpl patientDaoImpl = null;
+    AppointmentDaoImpl appointmentDaoImpl = null;
+    ComplaintDaoOImpl complaintDaoOImpl = null;
+    
     public static Integer id = null;
     Patient patient = null;
 
@@ -28,6 +33,9 @@ public class PatientFrmae extends javax.swing.JFrame {
      */
     public PatientFrmae() {
         patientDaoImpl = new PatientDaoImpl();
+        appointmentDaoImpl = new AppointmentDaoImpl();
+        complaintDaoOImpl = new ComplaintDaoOImpl();
+        
         this.setLocation(200, 200);
 
         initComponents();
@@ -440,8 +448,13 @@ public class PatientFrmae extends javax.swing.JFrame {
         if (id != null) {
             int choice = JOptionPane.showConfirmDialog(null, "Delete this record?", "Do you want to delete this record?", NORMAL);
             if (choice == 0) { // yes
-                patientDaoImpl.deletePatient(id);
-                resetForm();
+                if(appointmentDaoImpl.getApponitmentsOfPatient(id).size() > 0 || complaintDaoOImpl.getComplaintsOfPatient(id).size() > 0){
+                    JOptionPane.showMessageDialog(rootPane, "Delete this patients appointmetns and complaints before deleting the record", "Can't delete this record", JOptionPane.ERROR_MESSAGE);
+                }else{
+                    patientDaoImpl.deletePatient(id);
+                    resetForm();
+                }
+                
             }
         } else {
             JOptionPane.showMessageDialog(rootPane, "Select a patient to delete", "Select record", JOptionPane.ERROR_MESSAGE);
